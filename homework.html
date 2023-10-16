@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homework by Saad Taous</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+        }
+
+        header {
+            background-color: #007BFF;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        main {
+            padding: 20px;
+            text-align: center;
+        }
+
+        footer {
+            background-color: #007BFF;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .homework-form {
+            margin-bottom: 20px;
+        }
+
+        .homework-input {
+            width: 70%;
+            padding: 8px;
+            margin-right: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        .image-input {
+            margin-top: 10px;
+        }
+
+        .submit-btn {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #homeworkList {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .homework-item {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 4px;
+            width: 200px;
+            text-align: left;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .homework-item p {
+            flex-grow: 1;
+        }
+
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+
+        .teacher-review {
+            width: 70%;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Homework by Saad Taous</h1>
+        <p>Hello Mister, this is my website for showcasing my homework.</p>
+        <p>Share your homework with this link: <a href="http://www.homework_saadtaous.com" target="_blank" rel="noopener noreferrer">www.homework_saadtaous.com</a></p>
+    </header>
+
+    <main>
+        <div class="homework-form">
+            <h2>Add Homework</h2>
+            <form id="homeworkForm" onsubmit="addHomework(event)">
+                <input type="text" id="homeworkContent" class="homework-input" placeholder="Enter your homework..." required>
+                <input type="file" id="imageInput" class="image-input" accept="image/*">
+                <button type="submit" class="submit-btn">Submit</button>
+            </form>
+        </div>
+
+        <section>
+            <h2>Homework List</h2>
+            <ul id="homeworkList"></ul>
+        </section>
+
+        <div class="teacher-review">
+            <h2>Teacher Review</h2>
+            <textarea id="teacherReview" rows="4" placeholder="Write your review..."></textarea>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Homework by Saad Taous</p>
+    </footer>
+
+    <script>
+        // Retrieve stored homework items from local storage
+        const storedHomework = JSON.parse(localStorage.getItem('homework')) || [];
+
+        // Display stored homework items
+        const homeworkList = document.getElementById('homeworkList');
+        storedHomework.forEach((item, index) => displayHomework(item, index));
+
+        function addHomework(event) {
+            event.preventDefault();
+
+            const homeworkContent = document.getElementById('homeworkContent').value;
+            const imageInput = document.getElementById('imageInput');
+            
+            // For simplicity, we're not handling image uploads in this example.
+            // You would typically send the image to a server for processing.
+
+            // Save the new homework item to local storage
+            storedHomework.push({ content: homeworkContent, image: null });
+            localStorage.setItem('homework', JSON.stringify(storedHomework));
+
+            // Display the new homework item
+            displayHomework(homeworkContent, storedHomework.length - 1);
+
+            // Clear the input fields after submission
+            document.getElementById('homeworkContent').value = '';
+            imageInput.value = ''; // Clear the file input (for security reasons)
+        }
+
+        function deleteHomework(index) {
+            // Remove the item from the stored data
+            storedHomework.splice(index, 1);
+
+            // Update local storage
+            localStorage.setItem('homework', JSON.stringify(storedHomework));
+
+            // Remove the item from the display
+            const itemToRemove = document.getElementById(`homeworkItem_${index}`);
+            itemToRemove.remove();
+        }
+
+        function displayHomework(item, index) {
+            const newHomeworkItem = document.createElement('li');
+            newHomeworkItem.id = `homeworkItem_${index}`;
+            newHomeworkItem.className = 'homework-item';
+            newHomeworkItem.innerHTML = `
+                <p>${item.content}</p>
+                <button class="delete-btn" onclick="deleteHomework(${index})">Delete</button>
+            `;
+            homeworkList.appendChild(newHomeworkItem);
+        }
+    </script>
+</body>
+</html>
